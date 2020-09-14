@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 
 namespace dotnetcoreapi.API.Models
 {
-    public class CityDto
+    public class PointOfInterestDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int NumberOfPointsOfInterest { get { return PointsOfInterest.Count(); } }
-
-        public IEnumerable<PointOfInterestDto> PointsOfInterest {get;set;}=new List<PointOfInterestDto>();
     }
 }
