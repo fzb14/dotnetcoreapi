@@ -26,8 +26,9 @@ namespace dotnetcoreapi.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
+            app.UseStatusCodePages();
             app.UseMvc();
             //app.UseEndpoints(endpoints =>
             //{

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using dotnetcoreapi.API.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,21 @@ namespace dotnetcoreapi.API.Controllers
     public class CitiesController : ControllerBase
     {
         [HttpGet]
-        public JsonResult GetCities()
+        public IActionResult GetCities()
         {
-            return new JsonResult(
-                new List<object>
-                {
-                    new {id=1, cityName="New York"},
-                    new {id=2, cityName="Tokyo"}
-                }
+            return Ok(
+                CityDataStore.InitialData.Cities
             );
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetCity(int id)
+        {
+            var result = CityDataStore.InitialData.Cities.FirstOrDefault<CityDto>(c => c.Id == id);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
     }
 }
