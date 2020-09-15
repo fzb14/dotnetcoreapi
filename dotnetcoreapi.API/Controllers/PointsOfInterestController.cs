@@ -1,6 +1,7 @@
 ﻿using dotnetcoreapi.API.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 //using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
@@ -14,24 +15,44 @@ namespace dotnetcoreapi.API.Controllers
     public class PointsOfInterestController : ControllerBase
     {
         private List<CityDto> Cities;
-        public PointsOfInterestController() : base()
+        private readonly ILogger<PointsOfInterestController> logger;
+
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger) : base()
         {
             Cities = CityDataStore.InitialData.Cities.ToList();
+            this.logger = logger;
         }
         [HttpGet]
         public IActionResult GetPointsOfInterest(int cityId)
         {
-            var city = Cities.FirstOrDefault(c => c.Id == cityId);
-            if (city == null)
-                return NotFound();
-            return Ok(city.PointsOfInterest);
+            try
+            {
+                //throw new Exception("test exception.");
+                var city = Cities.FirstOrDefault(c => c.Id == cityId);
+                if (city == null)
+                {
+                    logger.LogInformation($"the city with id {cityId} is not found.");
+                    return NotFound();
+                }
+                return Ok(city.PointsOfInterest);
+            }
+            catch(Exception ex)
+            {
+                logger.LogCritical(ex,$"Exception happened when get points of interest of city with id {cityId}");
+                return StatusCode(500, "There is a problem when handling your request.");
+            }
+            
         }
         [HttpGet("{id}",Name = "GetPointOfInterest")]
         public IActionResult GetPointOfInterest(int cityId, int id)
         {
             var city = Cities.FirstOrDefault(c => c.Id == cityId);
             if (city == null)
+            {
+                logger.LogInformation($"the city with id {cityId} is not found.");
                 return NotFound();
+            }
+                
             var pi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
             if (pi == null)
                 return NotFound();
