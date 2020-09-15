@@ -12,6 +12,6 @@ namespace dotnetcoreapi.API.Models
         public string Description { get; set; }
         public int NumberOfPointsOfInterest { get { return PointsOfInterest.Count(); } }
 
-        public IEnumerable<PointOfInterestDto> PointsOfInterest {get;set;}=new List<PointOfInterestDto>();
+        public List<PointOfInterestDto> PointsOfInterest {get;set;}=new List<PointOfInterestDto>();
     }
 }
