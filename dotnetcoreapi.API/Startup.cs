@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using json=Newtonsoft.Json.Serialization;
 
 namespace dotnetcoreapi.API
@@ -17,7 +18,10 @@ namespace dotnetcoreapi.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => { options.EnableEndpointRouting = false; })
+            services.AddMvc(options => { 
+                options.EnableEndpointRouting = false;
+                options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            })
             //services.AddMvc()
                 .AddJsonOptions(o => {
                     //o.JsonSerializerOptions.DictionaryKeyPolicy = null;
