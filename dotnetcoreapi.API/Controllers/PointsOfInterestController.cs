@@ -36,7 +36,7 @@ namespace dotnetcoreapi.API.Controllers
             return Ok(pi);
         }
         [HttpPost]
-        public IActionResult PostPointOfIntest(int cityId, [FromBody]PointOfInterestForCreateDto poi)
+        public IActionResult CreatePointOfIntest(int cityId, [FromBody]PointOfInterestForCreateDto poi)
         {
             if (poi.Name == poi.Description)
             {
@@ -63,7 +63,22 @@ namespace dotnetcoreapi.API.Controllers
             city.PointsOfInterest.Add(newPoi);
             return CreatedAtRoute("GetPointOfInterest", new { cityId, id = maxPoiId }, newPoi);
         }
+        [HttpPut("{id}")]
+        public IActionResult UpdatePointOfInterest(int cityId, int id, [FromBody] PointOfInterestDto poi)
+        {
+            var city = Cities.FirstOrDefault(c => c.Id == cityId);
+            if (city == null)
+            {
+                return BadRequest();
+            }
+            var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
+            if (targetPoi == null)
+                return NotFound();
+            targetPoi.Name = poi.Name;
+            targetPoi.Description = poi.Description;
 
+            return RedirectToAction("GetPointOfInterest", new { cityId, id });
+        }
 
     }
 }
