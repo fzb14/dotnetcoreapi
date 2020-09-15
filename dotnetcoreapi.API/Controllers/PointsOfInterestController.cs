@@ -96,6 +96,8 @@ namespace dotnetcoreapi.API.Controllers
             patchDoc.ApplyTo(poiToPatch,ModelState);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            if (!TryValidateModel(poiToPatch))
+                return BadRequest(ModelState);
             targetPoi.Name = poiToPatch.Name;
             targetPoi.Description = poiToPatch.Description;
             return NoContent();
