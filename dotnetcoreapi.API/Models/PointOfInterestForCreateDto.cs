@@ -8,6 +8,7 @@ namespace dotnetcoreapi.API.Models
 {
     public class PointOfInterestForCreateDto
     {
+
         [Required(ErrorMessage ="错误：没有名称！")]
         [MaxLength(50)]
         public string Name { get; set; }

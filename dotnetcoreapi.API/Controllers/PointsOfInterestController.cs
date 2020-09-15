@@ -1,5 +1,7 @@
 ﻿using dotnetcoreapi.API.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +80,26 @@ namespace dotnetcoreapi.API.Controllers
             targetPoi.Description = poi.Description;
 
             return RedirectToAction("GetPointOfInterest", new { cityId, id });
+        }
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdatePointOfInterest(int cityId, int id, [FromBody] JsonPatchDocument<PointOfInterestForCreateDto> patchDoc)
+        {
+            var city = Cities.FirstOrDefault(c => c.Id == cityId);
+            if (city == null)
+            {
+                return BadRequest();
+            }
+            var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
+            if (targetPoi == null)
+                return NotFound();
+            var poiToPatch = new PointOfInterestForCreateDto(){ Name=targetPoi.Name,Description=targetPoi.Description};
+            patchDoc.ApplyTo(poiToPatch,ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            targetPoi.Name = poiToPatch.Name;
+            targetPoi.Description = poiToPatch.Description;
+            return NoContent();
+
         }
 
     }
