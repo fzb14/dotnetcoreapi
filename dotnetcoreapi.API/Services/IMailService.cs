@@ -1,0 +1,7 @@
+﻿namespace dotnetcoreapi.API.Services
+{
+    public interface IMailService
+    {
+        void Send(string subject, string msg);
+    }
+}

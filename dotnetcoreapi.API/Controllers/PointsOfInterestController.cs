@@ -17,13 +17,13 @@ namespace dotnetcoreapi.API.Controllers
     {
         private List<CityDto> Cities;
         private readonly ILogger<PointsOfInterestController> logger;
-        private readonly LocalMailService localMailService;
+        private readonly IMailService mailService;
 
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, LocalMailService localMailService) : base()
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService) : base()
         {
             Cities = CityDataStore.InitialData.Cities.ToList();
             this.logger = logger;
-            this.localMailService = localMailService;
+            this.mailService = mailService;
         }
         [HttpGet]
         public IActionResult GetPointsOfInterest(int cityId)
@@ -139,7 +139,7 @@ namespace dotnetcoreapi.API.Controllers
             if (targetPoi == null)
                 return NotFound();
             city.PointsOfInterest.Remove(targetPoi);
-            localMailService.Send("point of interest deleted.", $"point of interest {targetPoi.Name} in city {city.Name} is deleted.");
+            mailService.Send("point of interest deleted.", $"point of interest {targetPoi.Name} in city {city.Name} is deleted.");
             return NoContent();
         }
 
