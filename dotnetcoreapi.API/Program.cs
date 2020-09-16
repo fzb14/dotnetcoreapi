@@ -29,7 +29,7 @@ namespace dotnetcoreapi.API
                     {
                         var context = scope.ServiceProvider.GetService<CityInfoContext>();
                         //for demo only
-                        context.Database.EnsureDeleted();
+                        //context.Database.EnsureDeleted();
                         context.Database.Migrate();
                     }
                     catch(Exception ex)
