@@ -11,7 +11,7 @@ namespace dotnetcoreapi.API.Contexts
     {
         public CityInfoContext(DbContextOptions<CityInfoContext> options): base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
         DbSet<City> Cities { get; set; }
         DbSet<PointOfInterest> pointOfInterests { get; set; }
