@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using json=Newtonsoft.Json.Serialization;
+using dotnetcoreapi.API.Services;
 
 namespace dotnetcoreapi.API
 {
@@ -34,6 +35,7 @@ namespace dotnetcoreapi.API
                     o.JsonSerializerOptions.PropertyNamingPolicy = null;
                     o.JsonSerializerOptions.WriteIndented = true;
                 });
+            services.AddTransient<LocalMailService>();
             
         }
 
