@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -11,21 +12,21 @@ namespace dotnetcoreapi.API.Services
     public class LocalMailService : IMailService
     {
         private readonly ILogger<LocalMailService> logger;
-        private string _from = "abc@company.com";
-        private string _to = "rec@company.com";
+        private readonly IConfiguration configuration;
 
-        public LocalMailService(ILogger<LocalMailService> logger)
+        public LocalMailService(ILogger<LocalMailService> logger, IConfiguration configuration)
         {
             this.logger = logger;
+            this.configuration = configuration;
         }
 
         public void Send(string subject, string msg)
         {
-            Debug.WriteLine($"Mail sent from {this._from} to {this._to}, with LocalMailService");
+            Debug.WriteLine($"Mail sent from {configuration["mailSettings:mailFrom"]} to {configuration["mailSettings:mailTo"]}, with LocalMailService");
             Debug.WriteLine($"subject:{subject}");
             Debug.WriteLine($"Content:{msg}");
 
-            logger.LogInformation($"Mail sent from {this._from} to {this._to}, with LocalMailService");
+            logger.LogInformation($"Mail sent from {configuration["mailSettings:mailFrom"]} to {configuration["mailSettings:mailTo"]}, with LocalMailService");
             logger.LogInformation($"subject:{subject}");
             logger.LogInformation($"Content:{msg}");
 
