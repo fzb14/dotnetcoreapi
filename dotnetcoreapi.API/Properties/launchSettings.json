@@ -11,9 +11,11 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+            //"ASPNETCORE_ENVIRONMENT": "Production",
+            //"ConnectionStrings:CityInfoDB": "Data Source=(localdb)\\ProjectsV13;Initial Catalog=CityInfoDb_Production;Integrated Security=True;"
+        }
     },
     "dotnetcoreapi.API": {
       "commandName": "Project",

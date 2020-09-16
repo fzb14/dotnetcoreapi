@@ -49,8 +49,9 @@ namespace dotnetcoreapi.API
 #else
             services.AddTransient<IMailService,CloudMailService>();
 #endif
+            string conStr = configuration.GetConnectionString("CityInfoDB");
             services.AddDbContextPool<CityInfoContext>(o => {
-                o.UseSqlServer(configuration.GetConnectionString("CityInfoDB"));
+                o.UseSqlServer(conStr);
             });
         }
 
