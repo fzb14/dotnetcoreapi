@@ -53,6 +53,8 @@ namespace dotnetcoreapi.API
             services.AddDbContextPool<CityInfoContext>(o => {
                 o.UseSqlServer(conStr);
             });
+
+            services.AddScoped<ICityInfoRepository, CityInfoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
