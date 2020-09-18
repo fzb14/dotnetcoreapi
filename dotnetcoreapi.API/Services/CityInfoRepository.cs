@@ -68,6 +68,12 @@ namespace dotnetcoreapi.API.Services
         {
 
         }
+        public void DeletePoiForCity(int cityId, int id)
+        {
+            var poi = cityInfoContext.pointOfInterests.FirstOrDefault(p => p.CityId == cityId && p.Id == id);
+            if (poi != null)
+                cityInfoContext.pointOfInterests.Remove(poi);
+        }
 
         public bool Save()
         {

@@ -17,6 +17,7 @@ namespace dotnetcoreapi.API.Services
         PointOfInterest GetPoi(int cityId, int poiId);
         void AddPoiForCity(int cityId, PointOfInterest poi);
         void UpdatePoiForCity(int cityId, PointOfInterest poi);
+        void DeletePoiForCity(int cityId, int id);
         bool Save();
     }
 }

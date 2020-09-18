@@ -137,43 +137,49 @@ namespace dotnetcoreapi.API.Controllers
 
             return RedirectToAction("GetPointOfInterest", new { cityId, id });
         }
-        //[HttpPatch("{id}")]
-        //public IActionResult PartiallyUpdatePointOfInterest(int cityId, int id, [FromBody] JsonPatchDocument<PointOfInterestForCreateDto> patchDoc)
-        //{
-        //    var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
-        //    if (city == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
-        //    if (targetPoi == null)
-        //        return NotFound();
-        //    var poiToPatch = new PointOfInterestForCreateDto(){ Name=targetPoi.Name,Description=targetPoi.Description};
-        //    patchDoc.ApplyTo(poiToPatch,ModelState);
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-        //    if (!TryValidateModel(poiToPatch))
-        //        return BadRequest(ModelState);
-        //    targetPoi.Name = poiToPatch.Name;
-        //    targetPoi.Description = poiToPatch.Description;
-        //    return NoContent();
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdatePointOfInterest(int cityId, int id, [FromBody] JsonPatchDocument<PointOfInterestForCreateDto> patchDoc)
+        {
+            //var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
+            if (!cityInfoRepository.ExistsCity(cityId))
+            {
+                return BadRequest();
+            }
+            var targetPoi = cityInfoRepository.GetPoi(cityId, id);
+            if (targetPoi == null)
+                return NotFound();
 
-        //}
-        //[HttpDelete("{id}")]
-        //public IActionResult DeletePointOfInterest(int cityId, int id)
-        //{
-        //    var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
-        //    if (city == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
-        //    if (targetPoi == null)
-        //        return NotFound();
-        //    city.PointsOfInterest.Remove(targetPoi);
-        //    mailService.Send("point of interest deleted.", $"point of interest {targetPoi.Name} in city {city.Name} is deleted.");
-        //    return NoContent();
-        //}
+            //var poiToPatch = new PointOfInterestForCreateDto() { Name = targetPoi.Name, Description = targetPoi.Description };
+            var poiToPatch = mapper.Map<PointOfInterestForCreateDto>(targetPoi);
+            patchDoc.ApplyTo(poiToPatch, ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if (!TryValidateModel(poiToPatch))
+                return BadRequest(ModelState);
+
+            mapper.Map(poiToPatch, targetPoi);
+            cityInfoRepository.UpdatePoiForCity(cityId, targetPoi);
+            cityInfoRepository.Save();
+            return NoContent();
+
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeletePointOfInterest(int cityId, int id)
+        {
+            //var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
+            if (!cityInfoRepository.ExistsCity(cityId))
+            {
+                return BadRequest();
+            }
+            //var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
+            var targetPoi = cityInfoRepository.GetPoi(cityId, id);
+            if (targetPoi == null)
+                return NotFound();
+            cityInfoRepository.DeletePoiForCity(cityId, id);
+            cityInfoRepository.Save();
+            mailService.Send("point of interest deleted.", $"point of interest {targetPoi.Name} in city {targetPoi.CityId} is deleted.");
+            return NoContent();
+        }
 
     }
 }

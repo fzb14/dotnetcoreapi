@@ -13,8 +13,9 @@ namespace dotnetcoreapi.API.Profiles
         public PoiProfile()
         {
             CreateMap<PointOfInterest, PointOfInterestDto>();
+            CreateMap<PointOfInterest, PointOfInterestForCreateDto>().ReverseMap();
             CreateMap<PointOfInterestDto, PointOfInterest>();
-            CreateMap<PointOfInterestForCreateDto, PointOfInterest>();
+            //CreateMap<PointOfInterestForCreateDto, PointOfInterest>();
         }
     }
 }
