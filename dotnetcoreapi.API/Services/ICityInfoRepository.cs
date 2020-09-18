@@ -14,5 +14,7 @@ namespace dotnetcoreapi.API.Services
         IEnumerable<PointOfInterest> GetAllPois();
         IEnumerable<PointOfInterest> GetPoisWithCityId(int cityId);
         PointOfInterest GetPoi(int cityId, int poiId);
+        void AddPoiForCity(int cityId, PointOfInterest poi);
+        bool Save();
     }
 }

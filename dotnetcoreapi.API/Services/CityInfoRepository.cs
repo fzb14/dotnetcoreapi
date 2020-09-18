@@ -48,5 +48,22 @@ namespace dotnetcoreapi.API.Services
         {
             return cityInfoContext.pointOfInterests.Where(p => p.CityId == cityId).ToList();
         }
+
+        public void AddPoiForCity(int cityId, PointOfInterest poi)
+        {
+            //poi.CityId = cityId;
+            //cityInfoContext.pointOfInterests.Add(poi);
+            var city = cityInfoContext.Cities.FirstOrDefault(c => c.Id == cityId);
+            if (city != null)
+            {
+                city.PointsOfInterest.Add(poi);
+            }
+            //cityInfoContext.SaveChanges();
+        }
+
+        public bool Save()
+        {
+            return cityInfoContext.SaveChanges() >= 0;
+        }
     }
 }

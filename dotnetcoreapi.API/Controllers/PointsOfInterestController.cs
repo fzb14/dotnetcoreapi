@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using dotnetcoreapi.API.Entities;
 using dotnetcoreapi.API.Models;
 using dotnetcoreapi.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
@@ -84,34 +85,38 @@ namespace dotnetcoreapi.API.Controllers
             var result = mapper.Map<PointOfInterestDto>(pi);
             return Ok(result);
         }
-        //[HttpPost]
-        //public IActionResult CreatePointOfIntest(int cityId, [FromBody]PointOfInterestForCreateDto poi)
-        //{
-        //    if (poi.Name == poi.Description)
-        //    {
-        //        ModelState.AddModelError("description", "description must be different from name.");
-        //    }
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-        //    //var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
-        //    if (city == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    //var maxPoiId = FakeCities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id);
-        //    if (poi == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var newPoi = new PointOfInterestDto
-        //    {
-        //        Id = ++maxPoiId,
-        //        Name = poi.Name,
-        //        Description = poi.Description
-        //    };
-        //    city.PointsOfInterest.Add(newPoi);
-        //    return CreatedAtRoute("GeFaketPointOfInterest", new { cityId, id = maxPoiId }, newPoi);
-        //}
+        [HttpPost]
+        public IActionResult CreatePointOfIntest(int cityId, [FromBody] PointOfInterestForCreateDto poi)
+        {
+            if (poi.Name == poi.Description)
+            {
+                ModelState.AddModelError("description", "description must be different from name.");
+            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            //var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
+            if (!cityInfoRepository.ExistsCity(cityId))
+            {
+                return NotFound();
+            }
+            //var maxPoiId = FakeCities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id);
+            if (poi == null)
+            {
+                return BadRequest();
+            }
+            //var newPoi = new PointOfInterestDto
+            //{
+            //    Id = ++maxPoiId,
+            //    Name = poi.Name,
+            //    Description = poi.Description
+            //};
+            var newPoi = mapper.Map<PointOfInterest>(poi);
+            cityInfoRepository.AddPoiForCity(cityId, newPoi);
+            cityInfoRepository.Save();
+            //city.PointsOfInterest.Add(newPoi);
+            var createdPoi = mapper.Map<PointOfInterestDto>(newPoi);
+            return CreatedAtRoute("GetPointOfInterest", new { cityId, id = createdPoi.Id }, createdPoi);
+        }
         //[HttpPut("{id}")]
         //public IActionResult UpdatePointOfInterest(int cityId, int id, [FromBody] PointOfInterestDto poi)
         //{
