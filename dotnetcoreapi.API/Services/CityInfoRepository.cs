@@ -30,6 +30,10 @@ namespace dotnetcoreapi.API.Services
         {
             return cityInfoContext.Cities.Any(c => c.Id == id);
         }
+        public bool ExistsPoi(int id)
+        {
+            return cityInfoContext.pointOfInterests.Any(p => p.Id == id);
+        }
         public City GetCity(int id, bool includePois)
         {
             if (includePois)
@@ -59,6 +63,10 @@ namespace dotnetcoreapi.API.Services
                 city.PointsOfInterest.Add(poi);
             }
             //cityInfoContext.SaveChanges();
+        }
+        public void UpdatePoiForCity(int cityId, PointOfInterest poi)
+        {
+
         }
 
         public bool Save()

@@ -117,22 +117,26 @@ namespace dotnetcoreapi.API.Controllers
             var createdPoi = mapper.Map<PointOfInterestDto>(newPoi);
             return CreatedAtRoute("GetPointOfInterest", new { cityId, id = createdPoi.Id }, createdPoi);
         }
-        //[HttpPut("{id}")]
-        //public IActionResult UpdatePointOfInterest(int cityId, int id, [FromBody] PointOfInterestDto poi)
-        //{
-        //    var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
-        //    if (city == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
-        //    if (targetPoi == null)
-        //        return NotFound();
-        //    targetPoi.Name = poi.Name;
-        //    targetPoi.Description = poi.Description;
+        [HttpPut("{id}")]
+        public IActionResult UpdatePointOfInterest(int cityId, int id, [FromBody] PointOfInterestForCreateDto poi)
+        {
+            //var city = FakeCities.FirstOrDefault(c => c.Id == cityId);
+            if (!cityInfoRepository.ExistsCity(cityId))
+            {
+                return BadRequest();
+            }
+            //var targetPoi = city.PointsOfInterest.FirstOrDefault(p => p.Id == id);
+            if (!cityInfoRepository.ExistsPoi(id))
+                return NotFound();
+            var targetPoi = cityInfoRepository.GetPoi(cityId, id);
+            //targetPoi.Name = poi.Name;
+            //targetPoi.Description = poi.Description;
+            mapper.Map(poi, targetPoi);
+            cityInfoRepository.UpdatePoiForCity(cityId, targetPoi);
+            cityInfoRepository.Save();
 
-        //    return RedirectToAction("GetPointOfInterest", new { cityId, id });
-        //}
+            return RedirectToAction("GetPointOfInterest", new { cityId, id });
+        }
         //[HttpPatch("{id}")]
         //public IActionResult PartiallyUpdatePointOfInterest(int cityId, int id, [FromBody] JsonPatchDocument<PointOfInterestForCreateDto> patchDoc)
         //{

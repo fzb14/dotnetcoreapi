@@ -13,6 +13,7 @@ namespace dotnetcoreapi.API.Profiles
         public PoiProfile()
         {
             CreateMap<PointOfInterest, PointOfInterestDto>();
+            CreateMap<PointOfInterestDto, PointOfInterest>();
             CreateMap<PointOfInterestForCreateDto, PointOfInterest>();
         }
     }
