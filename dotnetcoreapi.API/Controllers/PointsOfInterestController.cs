@@ -1,4 +1,5 @@
-﻿using dotnetcoreapi.API.Models;
+﻿using AutoMapper;
+using dotnetcoreapi.API.Models;
 using dotnetcoreapi.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,15 @@ namespace dotnetcoreapi.API.Controllers
         private readonly ILogger<PointsOfInterestController> logger;
         private readonly IMailService mailService;
         private readonly ICityInfoRepository cityInfoRepository;
+        private readonly IMapper mapper;
 
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService,ICityInfoRepository cityInfoRepository) : base()
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService,ICityInfoRepository cityInfoRepository,IMapper mapper) : base()
         {
             //FakeCities = CityDataStore.InitialData.Cities.ToList();
             this.logger = logger;
             this.mailService = mailService;
             this.cityInfoRepository = cityInfoRepository;
+            this.mapper = mapper;
         }
         [HttpGet]
         public IActionResult GetPointsOfInterest(int cityId)
@@ -40,15 +43,16 @@ namespace dotnetcoreapi.API.Controllers
                     return NotFound();
                 }
                 var pois = cityInfoRepository.GetPoisWithCityId(cityId);
-                var result = new List<PointOfInterestDto>();
-                foreach(var p in pois)
-                {
-                    result.Add(new PointOfInterestDto { 
-                        Id=p.Id,
-                        Name= p.Name,
-                        Description=p.Description
-                    });
-                }
+                //var result = new List<PointOfInterestDto>();
+                //foreach(var p in pois)
+                //{
+                //    result.Add(new PointOfInterestDto { 
+                //        Id=p.Id,
+                //        Name= p.Name,
+                //        Description=p.Description
+                //    });
+                //}
+                var result = mapper.Map<IEnumerable<PointOfInterestDto>>(pois);
                 return Ok(result);
             }
             catch(Exception ex)
@@ -71,12 +75,13 @@ namespace dotnetcoreapi.API.Controllers
             var pi = cityInfoRepository.GetPoi(cityId,id);
             if (pi == null)
                 return NotFound();
-            var result = new PointOfInterestDto
-            {
-                Id = pi.Id,
-                Name = pi.Name,
-                Description = pi.Description
-            };
+            //var result = new PointOfInterestDto
+            //{
+            //    Id = pi.Id,
+            //    Name = pi.Name,
+            //    Description = pi.Description
+            //};
+            var result = mapper.Map<PointOfInterestDto>(pi);
             return Ok(result);
         }
         //[HttpPost]
